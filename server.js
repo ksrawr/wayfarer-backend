@@ -17,6 +17,17 @@ const PORT = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 
+/* Express Session Auth */
+app.use(session({
+	store: new MongoStore({ url: process.env.MONGO_URI }),
+	secret: process.env.SESSION_SECRET,
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 3 // Expire in 3 hours
+	}
+}));
+
 /* Auth Sign Up Route */
 app.post('/api/v1/signup', (request, response) => {
 
@@ -24,7 +35,7 @@ app.post('/api/v1/signup', (request, response) => {
 
 		if (error) return response.status(500).json({message: 'Something went wrong', error: error });
 
-		if (foundUser) return response.status(400).json({message: 'Email already exists', error: error});
+		if (foundUser) return response.status(400).json({message: 'Email already exists'});
 
 		bcrypt.genSalt(10, (error, salt) => {
 
@@ -65,20 +76,20 @@ app.post('/api/v1/login', (request, response) => {
 
 		if(error) return response.status(500).json({message: 'Something went wrong', error: error});
 
-		if(!foundUser) return response.status(400).json({message: 'User does not exist', error: error });
+		if(!foundUser) return response.status(400).json({message: 'User does not exist'});
 
 		bcrypt.compare(request.body.password, foundUser.password, (error, isMatch) => {
 
 			if(error) return response.status(500).json({message: "Something went wrong", error: error});
 
 			if(isMatch) {
-				 // request.session.currentUser = {
-				 // 	id: foundUser._id,
-				 // 	name: foundUser.name,
-				 // 	email: foundUser.email
-				 // };
+			  request.session.currentUser = {
+			  	id: foundUser._id,
+			  	name: foundUser.name,
+			  	email: foundUser.email
+			  };
 
-				return response.status(200).json({message: 'Success', error: error});
+				return response.status(200).json({message: 'Success'});
 			} else {
 				return response.status(400).json({message: 'Username/password is incorrect'});
 			}
@@ -87,6 +98,15 @@ app.post('/api/v1/login', (request, response) => {
 
 	})
 
+})
+
+/* Session Auth Verify */
+app.get('/api/v1/verify', (request, response) => {
+	if(!request.session.currentUser) {
+		return response.status(401).json({message: 'Unauthorized'})
+	}
+
+	response.status(200).json({message: `Current user verified. User ID: ${request.session.currentUser.id}`})
 })
 
 app.listen(PORT, () => {
