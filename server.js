@@ -109,6 +109,18 @@ app.get('/api/v1/verify', (request, response) => {
 	response.status(200).json({message: `Current user verified. User ID: ${request.session.currentUser.id}`})
 })
 
+/* Session Logout */
+app.delete('/api/v1/logout', (request, response) => {
+
+	if(!request.session.currentUser) return response.status(401).json({ messsage: 'Unauthorized'})
+
+	request.session.destroy(error => {
+		if(error) return response.status(500).json({message: 'Something went wrong. Please try again'});
+
+		response.sendStatus(200);
+	})
+})
+
 app.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
 });
