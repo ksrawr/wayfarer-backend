@@ -42,6 +42,9 @@ app.get("/api/v1/users", (req, res) => {
 /* Auth API Routes */
 app.use("/api/v1/", routes.auth);
 
+/* User API Routes */
+app.use("/api/v1/users", routes.user);
+
 app.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
 });
