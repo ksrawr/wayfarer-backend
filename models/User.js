@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const UserSchema = mongoose.Schema({
   name: {
@@ -25,8 +26,21 @@ const UserSchema = mongoose.Schema({
   userImage: {
     type: String,
     required: false
-  }
+  },
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Post"
+    }
+  ]
 });
+
+UserSchema.set("toJSON", {
+  transform: (doc, ret, opt) => {
+    delete ret["password"];
+    return ret
+  }
+})
 
 const User = mongoose.model("User", UserSchema);
 
