@@ -27,10 +27,12 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: false
   },
-  posts: {
-    type: Schema.Types.ObjectId,
-    ref: "Post"
-  }
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Post"
+    }
+  ]
 });
 
 const User = mongoose.model("User", UserSchema);

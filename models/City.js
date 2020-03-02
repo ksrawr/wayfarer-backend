@@ -5,10 +5,12 @@ const CitySchema = mongoose.Schema({
   name: { type: String },
   image: { type: String },
   descrip: { type: String },
-  posts: {
-    type: Schema.Types.ObjectId,
-    ref: "Post"
-  }
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Post"
+    }
+  ]
 });
 
 const City = mongoose.model("City", CitySchema);
