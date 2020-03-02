@@ -30,14 +30,26 @@ app.use(
   })
 );
 
-app.get("/api/v1/users", (req, res) => {
-  db.User.find({}, (err, foundUsers) => {
-    if (err) {
-      return res.json({ err });
-    }
-    res.json({ foundUsers });
-  });
-});
+// app.get("/api/v1/users", (req, res) => {
+//   db.User.find({}, (err, foundUsers) => {
+//     if (err) {
+//       return res.json({ err });
+//     }
+//     res.json({ foundUsers });
+//   });
+// });
+
+// app.post("/api/v1/cities", (req, res) => {
+//   db.City.create(req.body, (err, createdCity) => {
+//     if (err) {
+//       return res.json({ err });
+//     }
+//     res.json({ createdCity });
+//   });
+// });
+
+//________________________________City API Route
+app.use("/api/v1/", routes.city);
 
 /* Auth API Routes */
 app.use("/api/v1/", routes.auth);
