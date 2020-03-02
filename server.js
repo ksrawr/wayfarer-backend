@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
 const app = express();
 
 const db = require("./models");
@@ -10,9 +11,26 @@ const db = require("./models");
 require("dotenv").config();
 /* Change to .env variable later	 */
 const PORT = process.env.PORT || 4000;
-// const routes = require("./routes");
+const routes = require("./routes");
 
 //__________________________MIDDLEWARE__________________________//
+
+app.use(bodyParser.json());
+
+/* Express Session Auth */
+app.use(session({
+	store: new MongoStore({ url: process.env.MONGO_URI }),
+	secret: process.env.SESSION_SECRET,
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 3 // Expire in 3 hours
+	}
+}));
+
+
+/* Auth API Routes */
+app.use('/api/v1/', routes.auth);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
