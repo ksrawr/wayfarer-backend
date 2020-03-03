@@ -10,7 +10,8 @@ const PostSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   },
-  comments: [Comment.schema]
+  comments: [Comment.schema],
+  img: String
 });
 
 const Post = mongoose.model("Post", PostSchema);
