@@ -59,7 +59,14 @@ const login = (request, response) => {
 			  	email: foundUser.email
 			  };
 
-				return response.status(200).json({message: 'Success'});
+			  const responseObj = {
+			  	status: 200,
+			  	data: foundUser._id,
+			  	requestedAt: new Date().toLocaleString(),
+			  	message: 'Success',
+			  }
+
+				return response.status(200).json(responseObj);
 			} else {
 				return response.status(400).json({message: 'Username/password is incorrect'});
 			}
