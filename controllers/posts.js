@@ -76,9 +76,37 @@ const destroyPost = (req, res) => {
   });
 };
 
-module.exports = {
+const index = (req, res) => {
+  db.Post.find({}, (err, foundPosts) => {
+    if (err) {
+      console.log(err);
+    }
+    const resObj = {
+      data: foundPosts,
+      requestedAt: new Date().toLocaleString()
+    };
+    return res.json({ resObj });
+  });
+};
+
+const showPost = (req, res) => {
+  db.Post.findByIda(req.params.id, (err, foundPost) => {
+    if (err) {
+      console.log(err);
+    }
+    const resObj = {
+      data: foundPost,
+      requestedAt: new Date().toLocaleString()
+    };
+    return res.json({ resObj });
+  });
+};
+
+const show = (module.exports = {
   createPost,
   editPost,
   destroyPost,
+  index,
+  showPost,
   getPosts
-};
+});
