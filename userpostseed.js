@@ -57,7 +57,7 @@ const posts = [
 
     img: "https://i.imgur.com/TyrqyIb.jpg"
   }
-];
+];z
 
 db.User.deleteMany({}, () => {
   db.User.create(user, (err, createdUser) => {
