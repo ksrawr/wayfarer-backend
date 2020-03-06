@@ -1,4 +1,5 @@
 const db = require("./models");
+const bcrypt = require("bcryptjs");
 
 const user = {
   name: "User A",
@@ -64,21 +65,27 @@ const posts = [
   }
 ];
 db.Post.deleteMany({}, () => {
-  db.User.deleteMany({}, () => {
-    db.User.create(user, (err, createdUser) => {
-      if (err) {
-        console.log(err);
-      }
-      const userId = createdUser._id;
+  db.User.deleteMany({}, async () => {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+      db.User.create(user, (err, createdUser) => {
+        if (err) {
+          console.log(err);
+        }
+        const userId = createdUser._id;
 
-      for (i = 0; i < posts.length; i++) {
-        db.Post.create({ ...posts[i], user: userId }, (err, createdPost) => {
-          if (err) {
-            console.log(err);
-          }
-          console.log(createdPost);
-        });
-      }
-    });
+        for (i = 0; i < posts.length; i++) {
+          db.Post.create({ ...posts[i], user: userId }, (err, createdPost) => {
+            if (err) {
+              console.log(err);
+            }
+            console.log(createdPost);
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
   });
 });
