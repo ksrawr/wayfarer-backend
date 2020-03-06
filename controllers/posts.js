@@ -77,22 +77,24 @@ const index = (req, res) => {
 };
 
 const showPost = (req, res) => {
-  db.Post.findByIda(req.params.id, (err, foundPost) => {
-    if (err) {
-      console.log(err);
-    }
-    const resObj = {
-      data: foundPost,
-      requestedAt: new Date().toLocaleString()
-    };
-    return res.json({ resObj });
-  });
+  db.Post.findById(req.params.id)
+    .populate("user")
+    .exec((err, foundPost) => {
+      if (err) {
+        console.log(err);
+      }
+      const resObj = {
+        data: foundPost,
+        requestedAt: new Date().toLocaleString()
+      };
+      return res.json(resObj);
+    });
 };
 
-const show = (module.exports = {
+module.exports = {
   createPost,
   editPost,
   destroyPost,
   index,
   showPost
-});
+};
