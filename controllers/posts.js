@@ -30,6 +30,19 @@ const createPost = (request, response) => {
   });
 };
 
+const getPosts = (req, res) => {
+  db.Post.find((err, posts) => {
+    console.log(posts);
+    if (err) return res.status(400).json(err);
+    const resObj = {
+      message: "posts gotted",
+      data: posts,
+      requestedAt: new Date().toLocaleString
+    };
+    res.json(resObj);
+  });
+};
+
 const editPost = (req, res) => {
   db.Post.findByIdAndUpdate(
     req.params.id,
@@ -96,5 +109,6 @@ module.exports = {
   editPost,
   destroyPost,
   index,
-  showPost
+  showPost,
+  getPosts
 };
